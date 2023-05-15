@@ -1,0 +1,74 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+// Функция для вычисления производных и интегралов по формуле Гаусса
+void computeGaussFormulas(const std::vector<double>& values, std::vector<double>& derivatives, double& integral) {
+    // Здесь нужно реализовать вычисления производных и интеграла по формуле Гаусса
+    // ...
+    // Пример вычисления производных и интеграла
+    derivatives.resize(values.size());
+    for (size_t i = 0; i < values.size(); ++i) {
+        derivatives[i] = 2 * values[i];  // Производная f'(x) = 2x
+    }
+    integral = 0.5 * (values.front() + values.back());  // Интеграл f(x) = 0.5 * (f(a) + f(b))
+}
+int main() {
+    // Открытие входного файла для чтения
+    setlocale(LC_ALL, "Russian");
+    std::ifstream inputFile("input.txt");
+    if (!inputFile) {
+        // Создание файла, если его не существует
+        std::ofstream createFile("input.txt");
+        if (createFile.is_open())
+        {
+            createFile << "1.0 5.0 10" << std::endl;
+            createFile << "2.5 3.1 1.8 4.7 6.2 3.9 2.1 1.6 3.3 4.8" << std::endl;
+        }
+        createFile.close();
+    }
+    inputFile.close();
+    std::ifstream inputFile2("input.txt");
+    double a, b;
+    int numPoints;
+    std::vector<double> values;
+    if (inputFile2 >> a >> b >> numPoints) {
+        values.resize(numPoints);
+        for (int i = 0; i < numPoints; ++i) {
+            if (!(inputFile2 >> values[i])) {
+                std::cerr << "Ошибка чтения данных из файла" << std::endl;
+                return 1;
+            }
+        }
+    }
+    else {
+        std::cerr << "Ошибка чтения данных из файла" << std::endl;
+        return 1;
+    }
+    inputFile2.close();
+    // Вычисление производных и интеграла
+    std::vector<double> derivatives;
+    double integral;
+    computeGaussFormulas(values, derivatives, integral);
+    // Открытие выходного файла для записи
+    std::ofstream outputFile("output.txt");
+    if (!outputFile) {
+        // Создание файла, если его не существует
+        outputFile.open("output.txt");
+        outputFile.close();
+        outputFile.open("output.txt");
+        if (!outputFile) {
+            std::cerr << "Ошибка создания файла output.txt" << std::endl;
+            return 1;
+        }
+    }
+    // Запись результатов в файл
+    outputFile << "Производные:" << std::endl;
+    for (const auto& derivative : derivatives) {
+        outputFile << derivative << std::endl;
+    }
+    outputFile << "Интеграл: " << integral << std::endl;
+    // Закрытие выходного файла
+    outputFile.close();
+    return 0;
+}}
